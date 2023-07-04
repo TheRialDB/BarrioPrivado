@@ -26,5 +26,7 @@ namespace BarrioPrivado.BD.Data.Entity
         [Required(ErrorMessage = "El DNI es Obligatorio")]
         [MaxLength(10, ErrorMessage = "Solo se aceptan hasta 10 caracteres en el DNI")]
         public int DNI { get; set; }
+
+        public List<Visitante> Visitantes { get; set; } = new List<Visitante>();
     }
 }
