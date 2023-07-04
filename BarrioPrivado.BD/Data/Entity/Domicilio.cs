@@ -1,12 +1,15 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace BarrioPrivado.BD.Data.Entity
 {
+    [Index(nameof(ResidenteId), Name = "Domicilio_ResidenteId_UQ", IsUnique = true)]
     public class Domicilio
     {
         [Key]
