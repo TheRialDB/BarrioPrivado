@@ -2,6 +2,7 @@
 using BarrioPrivado.BD.Data;
 using BarrioPrivado.BD.Data.Entity;
 using Microsoft.EntityFrameworkCore;
+using BarrioPrivado.Shared.DTO;
 
 namespace BarrioPrivado.Server.Controllers
 {
@@ -20,7 +21,13 @@ namespace BarrioPrivado.Server.Controllers
         [HttpGet]
         public async Task<ActionResult<List<Domicilio>>> Get()
         {
-            return await context.Domicilios.ToListAsync();
+            var lista = await context.Domicilios.ToListAsync();
+            if (lista == null || lista.Count == 0)
+            {
+                return BadRequest("No hay domicilios cargados.");
+            }
+
+            return lista;
         }
 
         [HttpGet("{id:int}")]
@@ -35,13 +42,32 @@ namespace BarrioPrivado.Server.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<int>> Post(Domicilio domicilio)
+        public async Task<ActionResult> Post(DomicilioDTO domicilioDTO)
         {
-            //return BadRequest("ERROR DE PRUEBA");
-            context.Add(domicilio);
-            await context.SaveChangesAsync();
-            return domicilio.id;
+            try
+            {
+                Domicilio entidad = new Domicilio();
+                entidad.lote = domicilioDTO.lote;
+                entidad.manzana = domicilioDTO.manzana;
+
+                await context.AddAsync(entidad);
+                await context.SaveChangesAsync();
+                return Ok("Se cargo correctamente el Domicilio.");
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
         }
+
+        //[HttpPost]
+        //public async Task<ActionResult<int>> Post(Domicilio domicilio)
+        //{
+        //    //return BadRequest("ERROR DE PRUEBA");
+        //    context.Add(domicilio);
+        //    await context.SaveChangesAsync();
+        //    return domicilio.id;
+        //}
 
         [HttpPut("{id:int}")] // api/roles/2
         public async Task<ActionResult> Put(Domicilio domicilio, int id)

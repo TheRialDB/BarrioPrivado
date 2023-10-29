@@ -1,7 +1,7 @@
 ﻿using System.Text;
 using System.Text.Json;
 
-namespace Titulos.Client.Servicios
+namespace BarrioPrivado.Client.Servicios
 {
     public class HttpServicio : IHttpServicio
     {

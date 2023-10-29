@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BarrioPrivado.BD.Migrations
 {
     [DbContext(typeof(Context))]
-    [Migration("20230704024855_inicio")]
+    [Migration("20231029162235_inicio")]
     partial class inicio
     {
         /// <inheritdoc />
@@ -19,7 +19,7 @@ namespace BarrioPrivado.BD.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "7.0.8")
+                .HasAnnotation("ProductVersion", "7.0.10")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
@@ -32,20 +32,19 @@ namespace BarrioPrivado.BD.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("id"));
 
-                    b.Property<int>("ResidenteId")
+                    b.Property<int>("codigoDomicilio")
                         .HasColumnType("int");
 
                     b.Property<int>("lote")
-                        .HasMaxLength(10)
                         .HasColumnType("int");
 
                     b.Property<int>("manzana")
-                        .HasMaxLength(10)
                         .HasColumnType("int");
 
                     b.HasKey("id");
 
-                    b.HasIndex("ResidenteId");
+                    b.HasIndex(new[] { "codigoDomicilio" }, "Codigo_Domicilio_UQ")
+                        .IsUnique();
 
                     b.ToTable("Domicilios");
                 });
@@ -59,7 +58,9 @@ namespace BarrioPrivado.BD.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("id"));
 
                     b.Property<int>("DNI")
-                        .HasMaxLength(10)
+                        .HasColumnType("int");
+
+                    b.Property<int>("Domicilioid")
                         .HasColumnType("int");
 
                     b.Property<string>("apellido")
@@ -67,12 +68,17 @@ namespace BarrioPrivado.BD.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
+                    b.Property<int>("codigoDomicilio")
+                        .HasColumnType("int");
+
                     b.Property<string>("nombre")
                         .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
                     b.HasKey("id");
+
+                    b.HasIndex("Domicilioid");
 
                     b.HasIndex(new[] { "DNI" }, "Residente_DNI_UQ")
                         .IsUnique();
@@ -89,7 +95,6 @@ namespace BarrioPrivado.BD.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("id"));
 
                     b.Property<int>("DNI")
-                        .HasMaxLength(10)
                         .HasColumnType("int");
 
                     b.Property<int>("ResidenteId")
@@ -115,15 +120,15 @@ namespace BarrioPrivado.BD.Migrations
                     b.ToTable("Visitantes");
                 });
 
-            modelBuilder.Entity("BarrioPrivado.BD.Data.Entity.Domicilio", b =>
+            modelBuilder.Entity("BarrioPrivado.BD.Data.Entity.Residente", b =>
                 {
-                    b.HasOne("BarrioPrivado.BD.Data.Entity.Residente", "Residente")
+                    b.HasOne("BarrioPrivado.BD.Data.Entity.Domicilio", "Domicilio")
                         .WithMany()
-                        .HasForeignKey("ResidenteId")
+                        .HasForeignKey("Domicilioid")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Residente");
+                    b.Navigation("Domicilio");
                 });
 
             modelBuilder.Entity("BarrioPrivado.BD.Data.Entity.Visitante", b =>

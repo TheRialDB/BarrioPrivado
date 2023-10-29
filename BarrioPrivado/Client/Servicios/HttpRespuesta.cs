@@ -1,4 +1,4 @@
-﻿namespace Titulos.Client.Servicios
+﻿namespace BarrioPrivado.Client.Servicios
 {
     public class HttpRespuesta<T>
     {

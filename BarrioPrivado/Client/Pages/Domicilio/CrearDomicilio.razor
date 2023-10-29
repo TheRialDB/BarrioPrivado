@@ -1,0 +1,33 @@
+﻿@page "/domicilios/crear"
+@inject IHttpServicio http
+@inject NavigationManager navigationManager
+<h3>Nuevo Domicilio</h3>
+
+<FormDomicilio dom="domicilio" onValidSubbmit="Grabar" onCancel="Cancelar" />
+
+@code {
+    private Domicilio domicilio = new Domicilio();
+
+    private async Task Grabar() 
+    {
+        DomicilioDTO domicilioDTO = new()
+        {
+            lote = domicilio.lote,
+            manzana = domicilio.manzana
+        };
+        var httpRespueta = await http.Post<DomicilioDTO>("api/domicilios", domicilioDTO);
+
+        if (httpRespueta.Error)
+        {
+            var body = httpRespueta.HttpResponseMessage;
+        }
+
+        navigationManager.NavigateTo("/domicilios");
+    }
+
+    private void Cancelar()
+    {
+        navigationManager.NavigateTo("/domicilios");
+    }
+
+}

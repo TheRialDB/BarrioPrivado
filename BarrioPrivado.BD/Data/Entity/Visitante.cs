@@ -23,8 +23,7 @@ namespace BarrioPrivado.BD.Data.Entity
         [MaxLength(50, ErrorMessage = "Solo se aceptan hasta 50 caracteres en el APELLIDO")]
         public string apellido { get; set; }
 
-        [Required(ErrorMessage = "El DNI es Obligatorio")]
-        [MaxLength(10, ErrorMessage = "Solo se aceptan hasta 10 caracteres en el DNI")]
+        [Required(ErrorMessage = "El DNI es Obligatorio")]        
         public int DNI { get; set; }
 
         [Required(ErrorMessage = "El Residente del domicilio es Obligatorio")]

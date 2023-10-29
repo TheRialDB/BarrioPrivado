@@ -11,6 +11,21 @@ namespace BarrioPrivado.BD.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
+                name: "Domicilios",
+                columns: table => new
+                {
+                    id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    lote = table.Column<int>(type: "int", nullable: false),
+                    manzana = table.Column<int>(type: "int", nullable: false),
+                    codigoDomicilio = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Domicilios", x => x.id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Residentes",
                 columns: table => new
                 {
@@ -18,30 +33,17 @@ namespace BarrioPrivado.BD.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     nombre = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     apellido = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    DNI = table.Column<int>(type: "int", maxLength: 10, nullable: false)
+                    DNI = table.Column<int>(type: "int", nullable: false),
+                    codigoDomicilio = table.Column<int>(type: "int", nullable: false),
+                    Domicilioid = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Residentes", x => x.id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Domicilios",
-                columns: table => new
-                {
-                    id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    lote = table.Column<int>(type: "int", maxLength: 10, nullable: false),
-                    manzana = table.Column<int>(type: "int", maxLength: 10, nullable: false),
-                    ResidenteId = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Domicilios", x => x.id);
                     table.ForeignKey(
-                        name: "FK_Domicilios_Residentes_ResidenteId",
-                        column: x => x.ResidenteId,
-                        principalTable: "Residentes",
+                        name: "FK_Residentes_Domicilios_Domicilioid",
+                        column: x => x.Domicilioid,
+                        principalTable: "Domicilios",
                         principalColumn: "id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -54,7 +56,7 @@ namespace BarrioPrivado.BD.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     nombre = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     apellido = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    DNI = table.Column<int>(type: "int", maxLength: 10, nullable: false),
+                    DNI = table.Column<int>(type: "int", nullable: false),
                     ResidenteId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
@@ -69,9 +71,15 @@ namespace BarrioPrivado.BD.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Domicilios_ResidenteId",
+                name: "Codigo_Domicilio_UQ",
                 table: "Domicilios",
-                column: "ResidenteId");
+                column: "codigoDomicilio",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Residentes_Domicilioid",
+                table: "Residentes",
+                column: "Domicilioid");
 
             migrationBuilder.CreateIndex(
                 name: "Residente_DNI_UQ",
@@ -95,13 +103,13 @@ namespace BarrioPrivado.BD.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Domicilios");
-
-            migrationBuilder.DropTable(
                 name: "Visitantes");
 
             migrationBuilder.DropTable(
                 name: "Residentes");
+
+            migrationBuilder.DropTable(
+                name: "Domicilios");
         }
     }
 }
