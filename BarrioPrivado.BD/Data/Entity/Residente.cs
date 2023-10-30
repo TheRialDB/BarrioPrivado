@@ -24,12 +24,14 @@ namespace BarrioPrivado.BD.Data.Entity
         public string apellido { get; set; }
 
         [Required(ErrorMessage = "El DNI es Obligatorio")]
-        public int DNI { get; set; }
+        [MaxLength(10, ErrorMessage = "Solo se aceptan hasta 10 caracteres en el DNI")]
+        public string DNI { get; set; }
 
         public List<Visitante> Visitantes { get; set; } = new List<Visitante>();
-
+        
         [Required(ErrorMessage = "El Codigo del domicilio es Obligatorio")]
-        public int codigoDomicilio { get; set; }
-        public Domicilio Domicilio { get; set; }
+        [MaxLength(4, ErrorMessage = "Solo se aceptan hasta 4 caracteres en el CODIGO")]
+        public string codigoDomicilio { get; set; }
+        
     }
 }

@@ -2,6 +2,7 @@
 using BarrioPrivado.BD.Data;
 using BarrioPrivado.BD.Data.Entity;
 using Microsoft.EntityFrameworkCore;
+using BarrioPrivado.Shared.DTO;
 
 namespace BarrioPrivado.Server.Controllers
 {
@@ -20,7 +21,13 @@ namespace BarrioPrivado.Server.Controllers
         [HttpGet]
         public async Task<ActionResult<List<Residente>>> Get()
         {
-            return await context.Residentes.ToListAsync();
+            var lista = await context.Residentes.ToListAsync();
+            if (lista == null || lista.Count == 0)
+            {
+                return BadRequest("No hay residentes cargados.");
+            }
+
+            return lista;
         }
 
         [HttpGet("{id:int}")]
@@ -35,20 +42,39 @@ namespace BarrioPrivado.Server.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<int>> Post(Residente residente)
+        public async Task<ActionResult<int>> Post(ResidenteDTO residenteDTO)
         {
-            //return BadRequest("ERROR DE PRUEBA");
-            context.Add(residente);
+
+            Residente pepe = new Residente();
+
+            pepe.nombre = residenteDTO.nombre;
+            pepe.apellido = residenteDTO.apellido;
+            pepe.DNI = residenteDTO.DNI;
+            pepe.codigoDomicilio = residenteDTO.codigoDomicilio;
+
+            //var existe = await context.Domicilios.AnyAsync(x => x.codigoDomicilio == );
+            //if (existe)
+            //{
+            //    return BadRequest($"El Domicilio {cod} ya existe");
+            //}
+
+            //Profesion pepe = new() 
+            //{ 
+            //    CodProfesion = profesion.CodProfesion,
+            //    Titulo = profesion.Titulo
+            //};
+
+            await context.AddAsync(pepe);
             await context.SaveChangesAsync();
-            return residente.id;
+            return Ok("Se cargo correctamente el Residente.");
         }
 
-        [HttpPut("{id:int}")] // api/roles/2
+        [HttpPut("{id:int}")] // api/residentes/2
         public async Task<ActionResult> Put(Residente residente, int id)
         {
             if (id != residente.id)
             {
-                return BadRequest("El id del residente no corresponde");
+                return BadRequest("El id del residente no corresponde.");
             }
 
             var existe = await context.Residentes.AnyAsync(x => x.id == id);

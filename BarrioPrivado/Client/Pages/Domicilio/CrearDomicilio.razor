@@ -3,19 +3,20 @@
 @inject NavigationManager navigationManager
 <h3>Nuevo Domicilio</h3>
 
-<FormDomicilio dom="domicilio" onValidSubbmit="Grabar" onCancel="Cancelar" />
+<FormDomicilio dom="domicilio" onValidSubmit="Grabar" onCancel="Cancelar" />
 
 @code {
     private Domicilio domicilio = new Domicilio();
 
     private async Task Grabar() 
     {
-        DomicilioDTO domicilioDTO = new()
+        DomicilioDTO domicilioDTO = new() 
         {
             lote = domicilio.lote,
             manzana = domicilio.manzana
+
         };
-        var httpRespueta = await http.Post<DomicilioDTO>("api/domicilios", domicilioDTO);
+        var httpRespueta = await http.Post<DomicilioDTO>("api/Domicilios", domicilioDTO);
 
         if (httpRespueta.Error)
         {

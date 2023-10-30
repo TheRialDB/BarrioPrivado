@@ -25,8 +25,9 @@ namespace BarrioPrivado.BD.Data.Entity
         [MaxLength(3, ErrorMessage = "Solo se aceptan hasta 3 caracteres en la MANZANA")]
         public string manzana { get; set; }
 
-        [Required(ErrorMessage = "El CODIGO es Obligatorio")]
+        //[Required(ErrorMessage = "El CODIGO es Obligatorio")]
         public string codigoDomicilio { get; set; }
+
 
         //[Required(ErrorMessage = "El Residente del domicilio es Obligatorio")]
         //public int ResidenteId { get; set; }

@@ -1,4 +1,4 @@
-﻿<EditForm Model="dom" OnValidSubmit="onValidSubbmit">
+﻿<EditForm Model="dom" OnValidSubmit="onValidSubmit">
     <DataAnnotationsValidator />
     <div class="form-group">
         <label>Lote</label>
@@ -22,6 +22,6 @@
 
 @code {
     [Parameter] public Domicilio dom { get; set; } = new Domicilio();
-    [Parameter] public EventCallback onValidSubbmit { get; set; }
+    [Parameter] public EventCallback onValidSubmit { get; set; }
     [Parameter] public EventCallback onCancel { get; set; }
 }

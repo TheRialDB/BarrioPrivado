@@ -1,0 +1,36 @@
+﻿@page "/residentes/crear"
+@inject IHttpServicio http
+@inject NavigationManager navigationManager
+<h3>Nuevo Residente</h3>
+
+<FormResidente res="residente" onValidSubmit="Grabar" onCancel="Cancelar" />
+
+@code {
+    private Residente residente = new Residente();
+
+    private async Task Grabar() 
+    {
+        ResidenteDTO residenteDTO = new() 
+        {
+            nombre = residente.nombre,
+            apellido = residente.apellido,
+            DNI = residente.DNI,
+            codigoDomicilio = residente.codigoDomicilio
+
+        };
+        var httpRespueta = await http.Post<ResidenteDTO>("api/Residentes", residenteDTO);
+
+        if (httpRespueta.Error)
+        {
+            var body = httpRespueta.HttpResponseMessage;
+        }
+
+        navigationManager.NavigateTo("/residentes");
+    }
+
+    private void Cancelar()
+    {
+        navigationManager.NavigateTo("/residentes");
+    }
+
+}

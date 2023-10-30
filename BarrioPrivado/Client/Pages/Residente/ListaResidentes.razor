@@ -1,21 +1,22 @@
-﻿@page "/domicilios"
+﻿@page "/residentes"
 @inject IHttpServicio http
 
-<PageTitle>DOMICILIOS</PageTitle>
+<PageTitle>Residentes</PageTitle>
 
 <HeadContent>
-    <meta name="description" content="Listado de domicilios" />
+    <meta name="description" content="Listado de residentes" />
 </HeadContent>
 
-<h3>Lista de Domicilios</h3>
+<h3>Lista de Residentes</h3>
 
-<a class="btn btn-primary" href="domicilios/crear">Crear Domicilio</a>
+<a class="btn btn-primary" href="residentes/crear">Crear Residente</a>
 
 <table>
     <tr>
-        <th>Lote</th>
-        <th>Manzana</th>
-        <th>Codigo</th>
+        <th>Nombre</th>
+        <th>Apellido</th>
+        <th>DNI</th>
+        <th>Codigo Domicilio</th>
     </tr>
 
     @if (Error)
@@ -24,25 +25,26 @@
     }
     else
     {
-        @if (domicilios == null)
+        @if (residentes == null)
         {
             <tr>Cargando....</tr>
         }
-        else if (domicilios.Count == 0)
+        else if (residentes.Count == 0)
         {
             <tr>no existen datos</tr>
         }
         else
         {
-            @foreach (var item in domicilios)
+            @foreach (var item in residentes)
             {
                 <tr>
-                    <td>@item.lote</td>
-                    <td>@item.manzana</td>
+                    <td>@item.nombre</td>
+                    <td>@item.apellido</td>
+                    <td>@item.DNI</td>
                     <td>@item.codigoDomicilio</td>
                     <td>
                         <a class="btn btn-primary"
-                           href="domicilios/editar/@item.id">
+                           href="residentes/editar/@item.id">
                             Editar
                         </a>
                     </td>
@@ -61,11 +63,11 @@
               verCancelar="true"
               verOk="true"
               textOk="Aceptar"
-              Titulo="Borrar domicilio"
+              Titulo="Borrar residente"
               onCancel="Cancelar"
               onConfirm="Borrar">
     <div>
-        <h1>Está por borrar el domicilio @DomicilioBorrar.lote</h1>
+        <h1>Está por borrar el residente @ResidenteBorrar.codigoDomicilio</h1>
         <br />
         ¿Está seguro que desea continuar?
     </div>
@@ -74,10 +76,10 @@
 @code {
     Confirmacion confirmacion;
 
-    List<Domicilio>? domicilios;
+    List<Residente>? residentes;
     bool Error = false;
     string Mensaje = "";
-    Domicilio DomicilioBorrar;
+    Residente ResidenteBorrar;
 
     protected override async Task OnInitializedAsync()
     {
@@ -87,12 +89,12 @@
 
     private async Task Leer()
     {
-        domicilios = null;
-        var respuesta = await http.Get<List<Domicilio>>("api/Domicilios");
+        residentes = null;
+        var respuesta = await http.Get<List<Residente>>("api/Residentes");
         Error = respuesta.Error;
         if (!respuesta.Error)
         {
-            domicilios = respuesta.Respuesta;
+            residentes = respuesta.Respuesta;
         }
         else
         {
@@ -103,18 +105,18 @@
     private void Cancelar()
     {
         confirmacion.Ocultar();
-        DomicilioBorrar = null;
+        ResidenteBorrar = null;
     }
 
-    private async Task Eliminar(Domicilio domBorrar)
+    private async Task Eliminar(Residente resBorrar)
     {
-        DomicilioBorrar = domBorrar;
+        ResidenteBorrar = resBorrar;
         confirmacion.Ver();
     }
 
     private async Task Borrar()
     {
-        var respuesta = await http.Delete($"api/Domicilios/{DomicilioBorrar.id}");
+        var respuesta = await http.Delete($"api/Residentes/{ResidenteBorrar.id}");
         if (respuesta.Error)
         {
             var body = "error no se pudo borrar";

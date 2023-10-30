@@ -3,6 +3,7 @@ using BarrioPrivado.BD.Data;
 using BarrioPrivado.BD.Data.Entity;
 using Microsoft.EntityFrameworkCore;
 using BarrioPrivado.Shared.DTO;
+using System.Runtime.Intrinsics.Arm;
 
 namespace BarrioPrivado.Server.Controllers
 {
@@ -41,23 +42,51 @@ namespace BarrioPrivado.Server.Controllers
             return await context.Domicilios.FirstOrDefaultAsync(x => x.id == id);
         }
 
-        [HttpPost]
-        public async Task<ActionResult> Post(DomicilioDTO domicilioDTO)
-        {
-            try
-            {
-                Domicilio entidad = new Domicilio();
-                entidad.lote = domicilioDTO.lote;
-                entidad.manzana = domicilioDTO.manzana;
+        //[HttpPost]
+        //public async Task<ActionResult> Post(DomicilioDTO domicilioDTO)
+        //{
+        //    try
+        //    {
+        //        Domicilio entidad = new Domicilio();
+        //        entidad.lote = domicilioDTO.lote;
+        //        entidad.manzana = domicilioDTO.manzana;
 
-                await context.AddAsync(entidad);
-                await context.SaveChangesAsync();
-                return Ok("Se cargo correctamente el Domicilio.");
-            }
-            catch (Exception e)
+        //        await context.AddAsync(entidad);
+        //        await context.SaveChangesAsync();
+        //        return Ok("Se cargo correctamente el Domicilio.");
+        //    }
+        //    catch (Exception e)
+        //    {
+        //        return BadRequest(e.Message);
+        //    }
+        //}
+
+        [HttpPost]
+        public async Task<ActionResult<int>> Post(DomicilioDTO domicilioDTO)
+        {
+
+            Domicilio pepe = new Domicilio();
+
+            pepe.lote = domicilioDTO.lote;
+            pepe.manzana = domicilioDTO.manzana;
+            string cod = domicilioDTO.lote + domicilioDTO.manzana;
+            pepe.codigoDomicilio = cod;
+
+            var existe = await context.Domicilios.AnyAsync(x => x.codigoDomicilio == cod);
+            if (existe)
             {
-                return BadRequest(e.Message);
+                return BadRequest($"El Domicilio {cod} ya existe");
             }
+
+            //Profesion pepe = new() 
+            //{ 
+            //    CodProfesion = profesion.CodProfesion,
+            //    Titulo = profesion.Titulo
+            //};
+
+            await context.AddAsync(pepe);
+            await context.SaveChangesAsync();
+            return Ok("Se cargo correctamente el Domicilio.");
         }
 
         //[HttpPost]
@@ -69,12 +98,30 @@ namespace BarrioPrivado.Server.Controllers
         //    return domicilio.id;
         //}
 
-        [HttpPut("{id:int}")] // api/roles/2
+        //[HttpPut("{id:int}")] 
+        //public async Task<ActionResult> Put(Domicilio domicilio, int id)
+        //{
+        //    if (id != domicilio.id)
+        //    {
+        //        return BadRequest("El id del domicilio no corresponde");
+        //    }
+
+        //    var existe = await context.Domicilios.AnyAsync(x => x.id == id);
+        //    if (!existe)
+        //    {
+        //        return NotFound($"El domicilio de id={id} no existe");
+        //    }
+
+        //    context.Update(domicilio);
+        //    await context.SaveChangesAsync();
+        //    return Ok();
+        //}
+        [HttpPut("{id:int}")] // api/domicilios/2
         public async Task<ActionResult> Put(Domicilio domicilio, int id)
         {
             if (id != domicilio.id)
             {
-                return BadRequest("El id del domicilio no corresponde");
+                return BadRequest("El id del domicilio no corresponde.");
             }
 
             var existe = await context.Domicilios.AnyAsync(x => x.id == id);

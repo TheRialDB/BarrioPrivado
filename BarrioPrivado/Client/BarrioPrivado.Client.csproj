@@ -16,8 +16,4 @@
     <ProjectReference Include="..\Shared\BarrioPrivado.Shared.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Pages\Residente\" />
-  </ItemGroup>
-
 </Project>

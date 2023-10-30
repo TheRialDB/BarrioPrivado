@@ -1,0 +1,51 @@
+﻿@page "/residentes/editar/{residenteid:int}"
+@inject IHttpServicio http
+@inject NavigationManager navigationManager
+<h3>Editar Residente</h3>
+
+<FormResidente res="residente" onValidSubmit="Grabar" onCancel="Cancelar" />
+
+@code {
+    private Residente residente = new();
+    [Parameter] public int residenteid { get; set; }
+    string Mensaje = "";
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+        await Mostrar();
+    }
+
+    private async Task Mostrar()
+    {
+        var respuesta = await http.Get<Residente>($"api/Residentes/{residenteid}");
+
+        if (!respuesta.Error)
+        {
+            residente = respuesta.Respuesta;
+        }
+        else
+        {
+            Mensaje = await respuesta.ObtenerError();
+        }
+
+    }
+
+    private async Task Grabar()
+    {
+        var respuesta = await http.Put<Residente>($"api/residentes/{residenteid}",
+                                                  residente);
+        if(respuesta.Error)
+        {
+            var body = respuesta.HttpResponseMessage;
+        }
+
+        navigationManager.NavigateTo("/residentes");
+    }
+
+    private void Cancelar()
+    {
+        navigationManager.NavigateTo("/residentes");
+    }
+}
